@@ -1,0 +1,46 @@
+# Credenciales y secretos
+.env
+bot_telegram/.env
+*.json
+!package.json
+
+# Base de datos
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# Documentos y archivos personales
+documentos/
+logs/
+
+# Imágenes y videos personales
+*.jpg
+*.JPG
+*.jpeg
+*.png
+*.PNG
+*.pdf
+*.PDF
+*.mov
+*.mp4
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+server.log
+
+# Archivos de backup y sync
+*.sh
+sync_dashboard.py
+update_dashboard_from_sheets.py
+importar_finanzas.py
