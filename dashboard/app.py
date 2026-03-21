@@ -289,6 +289,28 @@ def api_actividades():
     return jsonify(build_actividades_finca())
 
 
+@app.route('/api/sanitario')
+@requiere_auth
+def api_sanitario():
+    registros = db.get_sanitario()
+    # Normalize field names to match dashboard format
+    result = []
+    for r in registros:
+        result.append({
+            'id': r['id'],
+            'fecha': r['fecha'],
+            'tipo': r['tipo'],
+            'descripcion': r.get('notas') or r.get('tipo', ''),
+            'loteAplicado': r.get('lote_animales') or 'todos',
+            'animalesAfectados': r.get('cantidad') or 0,
+            'producto': r.get('producto') or 'No especificado',
+            'responsable': r.get('responsable') or 'Adriana Bastidas',
+            'notas': r.get('notas') or '',
+            'fromDB': True,
+        })
+    return jsonify(result)
+
+
 @app.route('/api/config')
 @requiere_auth
 def api_config():

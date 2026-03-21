@@ -941,17 +941,6 @@
                 producto: 'Hierro de la ganadería',
                 responsable: 'Adriana Bastidas y George Bastidas',
                 notas: 'Trabajo en corral. Marcación con hierro a las vacas nuevas de marzo 2026.'
-            },
-            // --- 17 Mar 2026: Curación de cascos ---
-            {
-                fecha: '2026-03-17',
-                tipo: 'tratamiento',
-                descripcion: 'Curación de cascos - 3 vacas',
-                loteAplicado: 'todos',
-                animalesAfectados: 3,
-                producto: 'No especificado',
-                responsable: 'Adriana Bastidas',
-                notas: 'Curación de cascos a 3 vacas.'
             }
         ];
 
@@ -3399,6 +3388,22 @@
             const [historialAbierto, setHistorialAbierto] = useState({}); // Controla qué historiales están abiertos: { 1: true, 2: false }
             const [rotacionData, setRotacionData] = useState(ROTACION_INICIAL);
             const [rotacionesAbiertas, setRotacionesAbiertas] = useState({}); // Controla qué rotaciones están abiertas: { "lote1-1": true, "lote1-2": false }
+
+            // Actividades sanitarias desde la base de datos (se fusionan con ACTIVIDADES_SANITARIAS)
+            const [sanitarioDB, setSanitarioDB] = useState([]);
+            useEffect(() => {
+                fetch('/api/sanitario', {credentials: 'include'})
+                    .then(r => r.json())
+                    .then(data => setSanitarioDB(data))
+                    .catch(() => {});
+            }, []);
+
+            // Fusión: hardcodeadas + DB, sin duplicados (evita repetir por misma fecha+tipo+animalesAfectados)
+            const actividadesSanitariasCompletas = React.useMemo(() => {
+                const hardcodedKeys = new Set(ACTIVIDADES_SANITARIAS.map(a => `${a.fecha}|${a.tipo}|${a.animalesAfectados}`));
+                const soloNuevas = sanitarioDB.filter(r => !hardcodedKeys.has(`${r.fecha}|${r.tipo}|${r.animalesAfectados}`));
+                return [...ACTIVIDADES_SANITARIAS, ...soloNuevas].sort((a, b) => a.fecha.localeCompare(b.fecha));
+            }, [sanitarioDB]);
 
             // Cargar movimientos de cuadra desde SQLite y actualizar cuadrasDias del lote actual
             useEffect(() => {
@@ -7272,7 +7277,7 @@
                                 <h2 className="text-xl font-bold text-white flex items-center gap-2">
                                     📋 Historial Completo de Actividades
                                 </h2>
-                                <span className="text-sm text-gray-400">{ACTIVIDADES_SANITARIAS.length} registros</span>
+                                <span className="text-sm text-gray-400">{actividadesSanitariasCompletas.length} registros</span>
                             </div>
                             
                             {/* Instrucciones compactas */}
@@ -7297,7 +7302,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {ACTIVIDADES_SANITARIAS.map((act, idx) => {
+                                        {actividadesSanitariasCompletas.map((act, idx) => {
                                             const tipoConfig = {
                                                 'vacunacion': { icon: '💉', bg: 'bg-gray-700', text: 'text-white', label: 'Vacunación' },
                                                 'purga': { icon: '💊', bg: 'bg-gray-700', text: 'text-white', label: 'Purga' },
