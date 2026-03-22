@@ -342,6 +342,7 @@ async def enviar_cuestionario_automatico(context: ContextTypes.DEFAULT_TYPE):
         return
 
     hoy = datetime.now(ZONA_COLOMBIA).strftime('%Y-%m-%d')
+    hoy_display = datetime.now(ZONA_COLOMBIA).strftime('%d/%m/%Y')
     sesion[chat_id] = {'fecha': hoy, 'domingo': es_domingo()}
 
     kb = InlineKeyboardMarkup([[
@@ -350,7 +351,7 @@ async def enviar_cuestionario_automatico(context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
         chat_id=chat_id,
         text=(
-            f"🐄 *Hola Adriana\\! Es hora del reporte — {hoy}*\n\n"
+            f"🐄 *Hola Adriana\\! Es hora del reporte — {hoy_display}*\n\n"
             "Son solo unas pregunticas, toca los botones para responder\\.\n\n"
             "_Si en algún momento te equivocas, escribe_ /corregir"
         ),
