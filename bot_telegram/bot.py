@@ -471,7 +471,7 @@ async def q_luz(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Domingos: Adriana no trabaja — saltar directamente a George
     if sesion[chat_id]['domingo']:
         sesion[chat_id]['adriana_presente'] = False
-        sesion[chat_id]['adriana_motivo'] = 'descanso_dominical'
+        sesion[chat_id]['adriana_motivo'] = 'Descanso dominical'
         kb = teclado([("✅ Sí trabajó", "george_si"), ("❌ No trabajó", "george_no")])
         await query.message.reply_text(
             "*2️⃣ ¿George trabajó hoy?*",
@@ -885,7 +885,7 @@ async def _confirmar(message, chat_id):
     if not jornales_txt:
         jornales_txt = '\n  Sin jornales'
 
-    novedad_txt = s.get('novedad') or 'Sin novedades'
+    novedad_txt = (s.get('novedad') or 'Sin novedades').replace('*', '').replace('_', ' ')
 
     sanitario_txt = ''
     if s.get('sanitario_tipo') == 'vacunacion':
@@ -1080,7 +1080,7 @@ async def q_confirmar(update: Update, context: ContextTypes.DEFAULT_TYPE):
     cuadra_txt_n = (f"🟢 Cambio Cuadra {s.get('cuadra_anterior')} → {s.get('cuadra_nueva')}"
                     if s.get('cuadra_movio') else f"➡️ Cuadra {s.get('cuadra_actual', '?')} sin cambio")
     jornales_n = ''.join(f"\n  • {j['tipo']} — {j['lote']}" for j in s.get('jornales', [])) or '\n  Sin jornales'
-    novedad_n  = s.get('novedad') or 'Sin novedades'
+    novedad_n  = (s.get('novedad') or 'Sin novedades').replace('*', '').replace('_', ' ')
     sanitario_n = ''
     if s.get('sanitario_tipo') == 'vacunacion':
         sanitario_n = f"\n💉 Vacunación: {s.get('sanitario_producto', '')} — {s.get('sanitario_lote_animales', 'Todos')}"
