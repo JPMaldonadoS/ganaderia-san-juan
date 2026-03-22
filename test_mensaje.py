@@ -6,7 +6,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 async def test():
-    bot = Bot(config.TOKEN)
+    bot = Bot(config.TELEGRAM_BOT_TOKEN)
     hoy_display = datetime.now(ZoneInfo('America/Bogota')).strftime('%d/%m/%Y')
     msg = (
         f"🐄 *Hola Adriana\\! Es hora del reporte — {hoy_display}*\n\n"
