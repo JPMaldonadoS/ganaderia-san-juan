@@ -317,7 +317,9 @@ def serve_dashboard():
         def _actualizar_rotaciones(match):
             bloque = match.group(1)
             for lote_num, cnt in db_counts.items():
-                bloque = re.sub(rf'\b{lote_num}:\s*\d+', f'{lote_num}: {cnt}', bloque)
+                m_actual = re.search(rf'\b{lote_num}:\s*(\d+)', bloque)
+                if m_actual and cnt > int(m_actual.group(1)):
+                    bloque = re.sub(rf'\b{lote_num}:\s*\d+', f'{lote_num}: {cnt}', bloque)
             return 'rotacionesPorLote: {' + bloque + '}'
         html = re.sub(
             r'rotacionesPorLote:\s*\{([^}]+)\}',
