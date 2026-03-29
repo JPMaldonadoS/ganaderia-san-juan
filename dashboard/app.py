@@ -152,6 +152,38 @@ def build_rotacion_config() -> dict:
     }
 
 
+def build_historial_movimientos() -> list:
+    """Lee rotaciones de DB y las convierte al formato historialMovimientos del JS."""
+    rotaciones = db.get_rotaciones()
+    result = []
+    for r in rotaciones:
+        result.append({
+            'lote':         r['lote_nuevo'],
+            'rotacionNum':  r['numero_rotacion'] or 1,
+            'fechaEntrada': r['fecha'] or '',
+            'fechaSalida':  r['fecha_salida'],
+            'animales':     r['animales'] or 0,
+            'nota':         r['notas'] or '',
+            'diasEnLote':   r['dias_total'],
+        })
+    return sorted(result, key=lambda x: x['fechaEntrada'])
+
+
+def lineas_historial_movimientos(rotaciones: list) -> str:
+    lines = []
+    for r in rotaciones:
+        fecha_salida = f"'{r['fechaSalida']}'" if r['fechaSalida'] else 'null'
+        dias_lote    = str(r['diasEnLote']) if r['diasEnLote'] is not None else 'null'
+        nota         = r['nota'].replace("'", "")
+        lines.append(
+            f"            {{ lote: {r['lote']}, rotacionNum: {r['rotacionNum']}, "
+            f"fechaEntrada: '{r['fechaEntrada']}', fechaSalida: {fecha_salida}, "
+            f"animales: {r['animales']}, nota: '{nota}', "
+            f"diasEnLote: {dias_lote}, cuadrasDias: [] }},"
+        )
+    return '\n'.join(lines)
+
+
 def fechas_en_html(html: str, patron: str) -> set:
     """Extrae todas las fechas que ya existen en una sección del HTML."""
     return set(re.findall(r"fecha:\s*'(\d{4}-\d{2}-\d{2})'", patron))
@@ -252,6 +284,46 @@ def serve_dashboard():
     html = re.sub(r'(loteActual\s*:\s*)\d+', f"loteActual: {rotacion['loteActual']}", html, count=1)
     html = re.sub(r'(totalAnimales\s*:\s*)\d+', f"totalAnimales: {rotacion['totalAnimales']}", html, count=1)
     html = re.sub(r"(fechaEntrada\s*:\s*)'[\d-]+'", f"fechaEntrada: '{rotacion['fechaEntrada']}'", html, count=1)
+
+    # 6. Inyectar historialMovimientos desde DB (solo entradas nuevas no presentes en HTML)
+    MARKER_HISTORIAL = '// ⚠️ HISTORIAL ROTACIONES DB'
+    m_hist = re.search(
+        r'historialMovimientos:\s*\[(.+?)' + re.escape(MARKER_HISTORIAL),
+        html, re.DOTALL
+    )
+    if m_hist:
+        existing = set(re.findall(
+            r"lote:\s*(\d+)[^}]*?fechaEntrada:\s*'(\d{4}-\d{2}-\d{2})'",
+            m_hist.group(1), re.DOTALL
+        ))
+        db_historial = build_historial_movimientos()
+        nuevas = [r for r in db_historial if (str(r['lote']), r['fechaEntrada']) not in existing]
+        if nuevas:
+            html = html.replace(
+                MARKER_HISTORIAL,
+                lineas_historial_movimientos(nuevas) + '\n                ' + MARKER_HISTORIAL,
+                1
+            )
+
+    # 7. Actualizar rotacionesPorLote desde DB (solo incrementa, nunca reduce valor HTML)
+    db_counts: dict[int, int] = {}
+    for r in db.get_rotaciones():
+        lote_n = r['lote_nuevo']
+        nr     = r['numero_rotacion'] or 1
+        if nr > db_counts.get(lote_n, 0):
+            db_counts[lote_n] = nr
+
+    if db_counts:
+        def _actualizar_rotaciones(match):
+            bloque = match.group(1)
+            for lote_num, cnt in db_counts.items():
+                bloque = re.sub(rf'\b{lote_num}:\s*\d+', f'{lote_num}: {cnt}', bloque)
+            return 'rotacionesPorLote: {' + bloque + '}'
+        html = re.sub(
+            r'rotacionesPorLote:\s*\{([^}]+)\}',
+            _actualizar_rotaciones,
+            html, count=1
+        )
 
     # Inyectar auto-refresh: recarga solo si la DB cambió
     AUTO_REFRESH_JS = """
