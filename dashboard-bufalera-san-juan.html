@@ -5950,10 +5950,8 @@
                                             borderColor = '#ff073a'; // Rojo para en uso
                                         } else if (estadoRecuperacion.estado === 'recuperando') {
                                             borderColor = '#cd853f'; // Ocre para recuperando
-                                        } else if (estadoRecuperacion.estado === 'disponible') {
-                                            borderColor = '#22c55e'; // Verde para disponible
-                                        } else if (estadoRecuperacion.estado === 'parcial') {
-                                            borderColor = '#cd853f'; // Ocre para parcial
+                                        } else {
+                                            borderColor = '#22c55e'; // Verde para disponible o parcial (mayoría recuperada)
                                         }
                                     }
                                     
@@ -6081,7 +6079,7 @@
                                             let strokeColor = '#ff073a';
                                             if (noDisponible) strokeColor = '#6b7280';
                                             else if (esActual) strokeColor = '#ff073a';
-                                            else if (estadoRecuperacion.estado === 'recuperando' || estadoRecuperacion.estado === 'parcial') strokeColor = '#cd853f';
+                                            else if (estadoRecuperacion.estado === 'recuperando') strokeColor = '#cd853f';
                                             else strokeColor = '#22c55e';
                                             return (
                                                 <path 
@@ -6109,7 +6107,7 @@
                                             let strokeColor = '#ff073a';
                                             if (noDisponible) strokeColor = '#6b7280';
                                             else if (esActual) strokeColor = '#ff073a';
-                                            else if (estadoRecuperacion.estado === 'recuperando' || estadoRecuperacion.estado === 'parcial') strokeColor = '#cd853f';
+                                            else if (estadoRecuperacion.estado === 'recuperando') strokeColor = '#cd853f';
                                             else strokeColor = '#22c55e';
                                             return (
                                                 <path 
@@ -6137,7 +6135,7 @@
                                             let strokeColor = '#ff073a';
                                             if (noDisponible) strokeColor = '#6b7280';
                                             else if (esActual) strokeColor = '#ff073a';
-                                            else if (estadoRecuperacion.estado === 'recuperando' || estadoRecuperacion.estado === 'parcial') strokeColor = '#cd853f';
+                                            else if (estadoRecuperacion.estado === 'recuperando') strokeColor = '#cd853f';
                                             else strokeColor = '#22c55e';
                                             return (
                                                 <path 
@@ -6165,10 +6163,10 @@
                                             let strokeColor = '#ff073a';
                                             if (noDisponible) strokeColor = '#6b7280';
                                             else if (esActual) strokeColor = '#ff073a';
-                                            else if (estadoRecuperacion.estado === 'recuperando' || estadoRecuperacion.estado === 'parcial') strokeColor = '#cd853f';
+                                            else if (estadoRecuperacion.estado === 'recuperando') strokeColor = '#cd853f';
                                             else strokeColor = '#22c55e';
                                             return (
-                                                <path 
+                                                <path
                                                     d="M 380 40 L 440 60 L 460 120 L 460 180 L 380 180 L 380 40 Z" 
                                                     fill={selectedLote === 4 ? "#1f2937" : "#111827"} 
                                                     stroke={strokeColor} 
@@ -6195,7 +6193,7 @@
                                             let strokeColor = '#ff073a';
                                             if (noDisponible) strokeColor = '#6b7280';
                                             else if (esActual) strokeColor = '#ff073a';
-                                            else if (estadoRecuperacion.estado === 'recuperando' || estadoRecuperacion.estado === 'parcial') strokeColor = '#cd853f';
+                                            else if (estadoRecuperacion.estado === 'recuperando') strokeColor = '#cd853f';
                                             else strokeColor = '#22c55e';
                                             return (
                                                 <path 
@@ -6223,7 +6221,7 @@
                                             let strokeColor = '#ff073a';
                                             if (noDisponible) strokeColor = '#6b7280';
                                             else if (esActual) strokeColor = '#ff073a';
-                                            else if (estadoRecuperacion.estado === 'recuperando' || estadoRecuperacion.estado === 'parcial') strokeColor = '#cd853f';
+                                            else if (estadoRecuperacion.estado === 'recuperando') strokeColor = '#cd853f';
                                             else strokeColor = '#22c55e';
                                             return (
                                                 <path 
@@ -6251,7 +6249,7 @@
                                             let strokeColor = '#ff073a';
                                             if (noDisponible) strokeColor = '#6b7280';
                                             else if (esActual) strokeColor = '#ff073a';
-                                            else if (estadoRecuperacion.estado === 'recuperando' || estadoRecuperacion.estado === 'parcial') strokeColor = '#cd853f';
+                                            else if (estadoRecuperacion.estado === 'recuperando') strokeColor = '#cd853f';
                                             else strokeColor = '#22c55e';
                                             return (
                                                 <path 
@@ -6277,7 +6275,7 @@
                                             let strokeColor = '#ff073a';
                                             if (noDisponible) strokeColor = '#6b7280';
                                             else if (esActual) strokeColor = '#ff073a';
-                                            else if (estadoRecuperacion.estado === 'recuperando' || estadoRecuperacion.estado === 'parcial') strokeColor = '#cd853f';
+                                            else if (estadoRecuperacion.estado === 'recuperando') strokeColor = '#cd853f';
                                             else strokeColor = '#22c55e';
                                             return (
                                                 <path 
@@ -6306,7 +6304,7 @@
                                             let strokeColor = '#ff073a';
                                             if (noDisponible) strokeColor = '#6b7280';
                                             else if (esActual) strokeColor = '#ff073a';
-                                            else if (estadoRecuperacion.estado === 'recuperando' || estadoRecuperacion.estado === 'parcial') strokeColor = '#cd853f';
+                                            else if (estadoRecuperacion.estado === 'recuperando') strokeColor = '#cd853f';
                                             else strokeColor = '#22c55e';
                                             return (
                                                 <path 
@@ -6334,7 +6332,7 @@
                                             let strokeColor = '#ff073a';
                                             if (noDisponible) strokeColor = '#6b7280';
                                             else if (esActual) strokeColor = '#ff073a';
-                                            else if (estadoRecuperacion.estado === 'recuperando' || estadoRecuperacion.estado === 'parcial') strokeColor = '#cd853f';
+                                            else if (estadoRecuperacion.estado === 'recuperando') strokeColor = '#cd853f';
                                             else strokeColor = '#22c55e';
                                             return (
                                                 <path 
