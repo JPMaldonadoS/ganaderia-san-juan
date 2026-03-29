@@ -5055,11 +5055,7 @@
                                                             ? 'bg-gray-900 border-2 border-[#ff073a] ring-2 ring-[#ff073a]/30'
                                                             : estadoRecuperacion.estado === 'recuperando'
                                                                 ? 'bg-gray-900 border-2 border-[#cd853f]'
-                                                                : estadoRecuperacion.estado === 'disponible' && rotaciones > 0
-                                                                    ? 'bg-gray-900 border-2 border-[#22c55e]'
-                                                                    : estadoRecuperacion.estado === 'parcial'
-                                                                        ? 'bg-gray-900 border-2 border-[#cd853f]'
-                                                                        : 'bg-gray-900 border-2 border-[#22c55e]'
+                                                                : 'bg-gray-900 border-2 border-[#22c55e]'
                                                 }`}
                                                 title={
                                                     noDisponible ? `🚫 Lote ${loteNum} - No disponible` :
@@ -6675,13 +6671,9 @@
                                                     ? 'bg-gray-900 border-2 border-gray-600' + (selectedLote === loteNum ? ' ring-gray-600' : '') // No disponible: fondo gris oscuro opaco con borde gris
                                                     : esActual 
                                                         ? 'bg-gray-900 border-2 border-[#ff073a] ring-2 ring-[#ff073a]/30' + (selectedLote === loteNum ? ' ring-[#ff073a] ring-4' : '') // En uso: fondo gris oscuro opaco con borde rojo
-                                                        : estadoRecuperacion.estado === 'recuperando' 
+                                                        : estadoRecuperacion.estado === 'recuperando'
                                                             ? 'bg-gray-900 border-2 border-[#cd853f]' + (selectedLote === loteNum ? ' ring-[#cd853f] ring-4' : '') // Recuperando: fondo gris oscuro opaco con borde ocre
-                                                            : estadoRecuperacion.estado === 'disponible' || rotaciones > 0
-                                                                ? 'bg-gray-900 border-2 border-[#22c55e]' + (selectedLote === loteNum ? ' ring-[#22c55e] ring-4' : '') // Disponible: fondo gris oscuro opaco con borde verde
-                                                                : estadoRecuperacion.estado === 'parcial'
-                                                                    ? 'bg-gray-900 border-2 border-[#cd853f]' + (selectedLote === loteNum ? ' ring-[#cd853f] ring-4' : '') // Parcial: fondo gris oscuro opaco con borde ocre
-                                                                    : 'bg-gray-900 border-2 border-[#22c55e]' + (selectedLote === loteNum ? ' ring-[#22c55e] ring-4' : '') // Disponible sin rotaciones: fondo gris oscuro opaco con borde verde
+                                                            : 'bg-gray-900 border-2 border-[#22c55e]' + (selectedLote === loteNum ? ' ring-[#22c55e] ring-4' : '') // Disponible o parcial: verde
                                             }`}
                                             title={
                                                 noDisponible ? `🚫 Lote ${loteNum} - No disponible (Requiere arreglo)` :
