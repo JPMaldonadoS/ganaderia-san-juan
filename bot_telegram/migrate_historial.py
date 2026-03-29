@@ -7,7 +7,7 @@ numero_rotacion correctamente en todas las rotaciones futuras.
 import sqlite3
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'ganaderia.db')
+DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', 'ganaderia.db'))
 
 # Historial completo en orden cronológico
 # (fecha, lote_anterior, lote_nuevo, animales, notas, fecha_salida, dias_total, numero_rotacion)
