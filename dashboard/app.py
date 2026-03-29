@@ -253,6 +253,29 @@ def serve_dashboard():
     html = re.sub(r'(totalAnimales\s*:\s*)\d+', f"totalAnimales: {rotacion['totalAnimales']}", html, count=1)
     html = re.sub(r"(fechaEntrada\s*:\s*)'[\d-]+'", f"fechaEntrada: '{rotacion['fechaEntrada']}'", html, count=1)
 
+    # Inyectar auto-refresh: recarga solo si la DB cambió
+    AUTO_REFRESH_JS = """
+<script>
+(function() {
+  var _ts = null;
+  function checkUpdate() {
+    fetch('/api/ultimo-update')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (_ts === null) { _ts = d.ts; return; }
+        if (d.ts !== _ts) { location.reload(); }
+      })
+      .catch(function() {});
+  }
+  setInterval(checkUpdate, 60000);
+  checkUpdate();
+})();
+</script>
+"""
+    last = html.rfind('</body>')
+    if last != -1:
+        html = html[:last] + AUTO_REFRESH_JS + html[last:]
+
     return html
 
 
@@ -263,6 +286,14 @@ def serve_dashboard():
 def index():
     html = serve_dashboard()
     return html, 200, {'Content-Type': 'text/html; charset=utf-8'}
+
+
+@app.route('/api/ultimo-update')
+@requiere_auth
+def api_ultimo_update():
+    db_path = os.path.join(BASE_DIR, 'data', 'ganaderia.db')
+    ts = int(os.path.getmtime(db_path)) if os.path.exists(db_path) else 0
+    return jsonify({'ts': ts})
 
 
 @app.route('/api/data')
@@ -334,6 +365,12 @@ def video_mp4():
 @requiere_auth
 def video_mov():
     return send_from_directory(BASE_DIR, 'Video1.mov')
+
+
+@app.route('/videorayasx.mp4')
+@requiere_auth
+def video_rayasx():
+    return send_from_directory(BASE_DIR, 'videorayasx.mp4')
 
 
 # ─── Documentos (PDFs guardados en disco) ─────────────────────────────────────
